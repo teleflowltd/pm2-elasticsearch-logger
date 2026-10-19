@@ -11,29 +11,30 @@ Maintained by [Teleflow](https://github.com/teleflow) for Node.js 26. Forked fro
 
 Requires Node.js 26 or later and PM2 7 or later.
 
-Clone the Teleflow fork, select Node.js 26, then build and install the module:
+The first Teleflow release has not been published yet. Once it is available, install it directly from GitHub:
 
 ```sh
-git clone https://github.com/teleflow/pm2-elasticsearch-logger.git
-cd pm2-elasticsearch-logger
-nvm install 26
-npm ci
-npm pack
-npx --no-install pm2 install "$PWD/pm2-elasticsearch-logger-2.0.0.tgz"
+pm2 install https://github.com/teleflow/pm2-elasticsearch-logger/releases/latest/download/pm2-elasticsearch-logger.tgz
 ```
 
-`nvm install 26` also selects that Node.js version for the current shell. If you manage Node.js another way, ensure `node --version` reports version 26 or later. `npx --no-install` uses the PM2 version installed in this checkout.
+No clone or build is needed on the server. If PM2 is not installed, run `npm install -g pm2@7` under Node.js 26 or later first.
 
-The package bundles its runtime dependencies so the security fixes also apply after PM2 installs it. PM2 installs a separate copy and registers it as a module, which starts again when the PM2 daemon starts. Use the same operating-system user and `PM2_HOME` as the applications whose logs you want to collect.
+You can also download `pm2-elasticsearch-logger.tgz` from the [releases page](https://github.com/teleflow/pm2-elasticsearch-logger/releases) or copy a built package to the server, then install the file:
+
+```sh
+pm2 install /absolute/path/to/pm2-elasticsearch-logger.tgz
+```
+
+The package bundles its runtime dependencies so the security fixes also apply after PM2 installs it. PM2 registers it as `pm2-elasticsearch-logger` and starts it again when the daemon starts. Use the same operating-system user and `PM2_HOME` as the applications whose logs you want to collect.
 
 Set your Elasticsearch URL and check the module's output:
 
 ```sh
-npx --no-install pm2 set pm2-elasticsearch-logger:elasticUrl http://localhost:9200
-npx --no-install pm2 logs pm2-elasticsearch-logger
+pm2 set pm2-elasticsearch-logger:elasticUrl http://localhost:9200
+pm2 logs pm2-elasticsearch-logger
 ```
 
-Installing `pm2-elasticsearch-logger` by name downloads the npm release, which does not include this checkout's unpublished changes. Install the package built from this repository to use the Teleflow fork. `pm2 install .` is PM2's development mode and enables file watching, so use the packaged installation above for deployment.
+`pm2 install pm2-elasticsearch-logger` installs the upstream npm package. Use the Teleflow release URL or package file to install this fork. `pm2 install .` enables PM2's development mode and file watching.
 
 
 ## Configuration
@@ -60,25 +61,22 @@ HTTP and HTTPS are supported, including basic authentication in `elasticUrl`. Ce
 
 ### Updating an existing installation
 
-Run PM2 under Node.js 26 or later. If the running daemon uses an older Node.js or PM2 version, update it using this checkout's PM2:
+Run PM2 under Node.js 26 or later. If the running daemon uses an older Node.js or PM2 version, update it first:
 
 ```sh
-npx --no-install pm2 update
+npm install -g pm2@7
+pm2 update
 ```
 
 This restarts the applications managed by that daemon.
 
-To update the installed Teleflow module, run these commands from your clone:
+To update the installed Teleflow module to the latest published release, repeat the URL installation:
 
 ```sh
-git pull --ff-only
-nvm use
-npm ci
-npm pack
-npx --no-install pm2 install "$PWD/pm2-elasticsearch-logger-2.0.0.tgz"
+pm2 install https://github.com/teleflow/pm2-elasticsearch-logger/releases/latest/download/pm2-elasticsearch-logger.tgz
 ```
 
-Existing module options are retained.
+Existing module options are retained. To pin a release, replace `releases/latest/download` in the URL with `releases/download/v3.0.0` or the version you require.
 
 ### Dependency security fixes
 
@@ -100,9 +98,25 @@ Pull Requests welcome!
 
 Use `nvm use`, then `npm ci` and `npm test`. Tests require OpenSSL 3 or later and generate temporary HTTPS certificates, which are deleted afterwards. PEM files are ignored by Git.
 
-Tests run with `--throw-deprecation` and cover HTTP/HTTPS forwarding, file watching, packaged installation and recovery after an isolated PM2 daemon restarts.
+Tests run with `--throw-deprecation` and cover HTTP/HTTPS forwarding, file watching, installation from a package URL and recovery after an isolated PM2 daemon restarts.
 
 Keep `pmx: false` in the `apps` entry: this module initialises `@pm2/io` itself. PM2's preload can otherwise read PM2's package metadata instead of this module's configuration.
+
+### Build a release package
+
+From a checked-out copy of this repository:
+
+```sh
+nvm use
+npm ci
+npm audit
+npm test
+npm run package
+```
+
+This creates `dist/pm2-elasticsearch-logger.tgz` and its SHA-256 checksum in `dist/pm2-elasticsearch-logger.tgz.sha256`. Upload both files to a GitHub release tagged `v3.0.0` for this version. Keep the asset name `pm2-elasticsearch-logger.tgz` so the direct installation URL continues to work for subsequent releases.
+
+Publishing a new npm name would require a separate npm release. A GitHub release package works with PM2 directly.
 
 
 ## License

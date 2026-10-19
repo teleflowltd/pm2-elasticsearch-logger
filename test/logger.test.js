@@ -200,7 +200,7 @@ for (const insecure of [true, 'true']) {
     });
 }
 
-test('forwards real PM2 process logs without deprecated APIs', {timeout: 30_000}, async t => {
+test('installs a release URL and forwards real PM2 process logs without deprecated APIs', {timeout: 30_000}, async t => {
     const receiver = await receiveLogs(t);
     const pm2Home = mkdtempSync(path.join(os.tmpdir(), 'pm2-es-test-'));
     const root = path.resolve(__dirname, '..');
@@ -238,13 +238,26 @@ test('forwards real PM2 process logs without deprecated APIs', {timeout: 30_000}
     });
 
     await run(['set', 'pm2-elasticsearch-logger:elasticUrl', receiver.url]);
-    const {stdout: packed} = await promisify(execFile)('npm', ['pack', '--json', '--pack-destination', pm2Home], {
+    await promisify(execFile)('npm', ['run', 'package', '--', pm2Home], {
         cwd: root,
         env,
         timeout: 15_000
     });
-    const tarball = path.join(pm2Home, JSON.parse(packed)[0].filename);
-    await run(['install', tarball]);
+    const tarball = readFileSync(path.join(pm2Home, 'pm2-elasticsearch-logger.tgz'));
+    const packageServer = http.createServer((request, response) => {
+        if (request.url !== '/pm2-elasticsearch-logger.tgz') {
+            response.writeHead(404).end();
+            return;
+        }
+        response.writeHead(200, {'Content-Type': 'application/octet-stream', 'Content-Length': tarball.length});
+        response.end(tarball);
+    });
+    await new Promise(resolve => packageServer.listen(0, '127.0.0.1', resolve));
+    t.after(() => new Promise(resolve => {
+        packageServer.closeAllConnections();
+        packageServer.close(resolve);
+    }));
+    await run(['install', `http://127.0.0.1:${packageServer.address().port}/pm2-elasticsearch-logger.tgz`]);
     const {stdout: listed} = await run(['jlist']);
     const installed = JSON.parse(listed).find(app => app.name === 'pm2-elasticsearch-logger');
     assert.equal(installed.pm2_env.status, 'online');

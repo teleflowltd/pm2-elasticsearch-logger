@@ -1,6 +1,6 @@
 {
   "name": "pm2-elasticsearch-logger",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "Send PM2 logs to Elasticsearch",
   "main": "index.js",
   "files": [
@@ -12,7 +12,8 @@
   "scripts": {
     "test": "npm run lint && node --throw-deprecation --test",
     "lint": "eslint .",
-    "lintfix": "eslint . --fix"
+    "lintfix": "eslint . --fix",
+    "package": "node scripts/package-release.js"
   },
   "repository": {
     "type": "git",
