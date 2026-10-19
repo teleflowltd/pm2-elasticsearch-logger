@@ -3,13 +3,20 @@
   "version": "2.0.0",
   "description": "Send PM2 logs to Elasticsearch",
   "main": "index.js",
+  "files": [
+    "index.js"
+  ],
+  "engines": {
+    "node": ">=26"
+  },
   "scripts": {
-    "test": "camo-purge; xo",
-    "lintfix": "xo --fix"
+    "test": "npm run lint && node --throw-deprecation --test",
+    "lint": "eslint .",
+    "lintfix": "eslint . --fix"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hobbyquaker/pm2-elasticsearch-logger.git"
+    "url": "git+https://github.com/teleflow/pm2-elasticsearch-logger.git"
   },
   "keywords": [
     "PM2",
@@ -26,25 +33,32 @@
   "apps": [
     {
       "name": "pm2-elasticsearch-logger",
-      "script": "index.js"
+      "script": "index.js",
+      "pmx": false
     }
   ],
   "author": "Sebastian Raff <hobbyquaker@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/hobbyquaker/pm2-elasticsearch-logger/issues"
+    "url": "https://github.com/teleflow/pm2-elasticsearch-logger/issues"
   },
-  "homepage": "https://github.com/hobbyquaker/pm2-elasticsearch-logger#readme",
+  "homepage": "https://github.com/teleflow/pm2-elasticsearch-logger#readme",
   "dependencies": {
-    "pm2": "latest",
-    "pmx": "latest",
-    "request": "^2.88.0"
+    "@pm2/io": "^6.1.0",
+    "pm2": "^7.0.4"
   },
+  "overrides": {
+    "basic-ftp": "^6.2.3",
+    "chokidar": "^5.0.0",
+    "js-yaml": "^4.3.2"
+  },
+  "bundleDependencies": [
+    "@pm2/io",
+    "pm2"
+  ],
   "devDependencies": {
-    "camo-purge": "^1.0.2",
-    "xo": "^0.24.0"
-  },
-  "xo": {
-    "space": 4
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.13.0",
+    "globals": "^17.13.0"
   }
 }
