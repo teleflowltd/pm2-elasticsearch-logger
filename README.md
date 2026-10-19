@@ -11,7 +11,7 @@ Maintained by [Teleflow](https://github.com/teleflowltd) for Node.js 26. Forked 
 
 Requires Node.js 26 or later and PM2 7 or later.
 
-The first Teleflow release has not been published yet. Once it is available, install it directly from GitHub:
+Install the packaged release directly from GitHub:
 
 ```sh
 pm2 install https://github.com/teleflowltd/pm2-elasticsearch-logger/releases/latest/download/pm2-elasticsearch-logger.tgz
