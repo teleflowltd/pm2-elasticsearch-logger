@@ -4,7 +4,7 @@
 
 Send stdout and stderr from applications managed by [PM2](https://pm2.io) to Elasticsearch.
 
-Maintained by [Teleflow](https://github.com/teleflow) for Node.js 26. Forked from [hobbyquaker/pm2-elasticsearch-logger](https://github.com/hobbyquaker/pm2-elasticsearch-logger).
+Maintained by [Teleflow](https://github.com/teleflowltd) for Node.js 26. Forked from [hobbyquaker/pm2-elasticsearch-logger](https://github.com/hobbyquaker/pm2-elasticsearch-logger).
 
 
 ## Install
@@ -14,12 +14,12 @@ Requires Node.js 26 or later and PM2 7 or later.
 The first Teleflow release has not been published yet. Once it is available, install it directly from GitHub:
 
 ```sh
-pm2 install https://github.com/teleflow/pm2-elasticsearch-logger/releases/latest/download/pm2-elasticsearch-logger.tgz
+pm2 install https://github.com/teleflowltd/pm2-elasticsearch-logger/releases/latest/download/pm2-elasticsearch-logger.tgz
 ```
 
 No clone or build is needed on the server. If PM2 is not installed, run `npm install -g pm2@7` under Node.js 26 or later first.
 
-You can also download `pm2-elasticsearch-logger.tgz` from the [releases page](https://github.com/teleflow/pm2-elasticsearch-logger/releases) or copy a built package to the server, then install the file:
+You can also download `pm2-elasticsearch-logger.tgz` from the [releases page](https://github.com/teleflowltd/pm2-elasticsearch-logger/releases) or copy a built package to the server, then install the file:
 
 ```sh
 pm2 install /absolute/path/to/pm2-elasticsearch-logger.tgz
@@ -73,7 +73,7 @@ This restarts the applications managed by that daemon.
 To update the installed Teleflow module to the latest published release, repeat the URL installation:
 
 ```sh
-pm2 install https://github.com/teleflow/pm2-elasticsearch-logger/releases/latest/download/pm2-elasticsearch-logger.tgz
+pm2 install https://github.com/teleflowltd/pm2-elasticsearch-logger/releases/latest/download/pm2-elasticsearch-logger.tgz
 ```
 
 Existing module options are retained. To pin a release, replace `releases/latest/download` in the URL with `releases/download/v3.0.0` or the version you require.
